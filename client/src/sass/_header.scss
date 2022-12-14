@@ -11,7 +11,7 @@
             font-weight: 400;
             text-transform: uppercase;
         
-            &:active, &:visited {
+            &:active {
                 color: var(--active-color);
                 position: relative;
                 font-weight: 600;

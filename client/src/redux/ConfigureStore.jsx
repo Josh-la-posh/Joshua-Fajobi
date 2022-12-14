@@ -10,7 +10,7 @@ export const ConfigureStore = () => {
             reducer: Reducer,
             product: Product,
         }),
-        applyMiddleware(thunk, logger)
+        applyMiddleware(thunk)
     );
     return store;
 }

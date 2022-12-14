@@ -1,164 +1,149 @@
 import * as ActionTypes from './ActionTypes';
-import { QUERY_ALL_CATEGORIES } from '../FetchData/DisplayData';
 
-// FETCHING DATA
-
-export const fetchData = () => (dispatch) => {
-    dispatch(dataLoading(true));
-
-    setTimeout(() => {
-        dispatch(addData(QUERY_ALL_CATEGORIES))
-    }, 2000);
-};
-
-export const dataLoading = () => ({
-    type: ActionTypes.DATA_LOADING
-});
-
-export const dataFailed = (errMess) => ({
-    type: ActionTypes.DATA_FAILED,
-    payload: errMess
-});
-
-export const addData = (product) => ({
-    type: ActionTypes.FETCH_DATA,
-    payload: product
-});
-
-export const addToCart = (product) => async (dispatch) => {
+export const addToCart = (id, gallery, brand, prices, name, attributes, selectedAttribute, index) => async (dispatch) => {
 
     // CART
     const cart = localStorage.getItem('data') ?
             JSON.parse(localStorage.getItem('data')) :
             [];
-    
+
+    let counter = 0;
+
+    if (attributes.length === selectedAttribute.length) {
+        cart.some(cartItem => cartItem.id === id)
+            ? cart.forEach((cartItem, index) => {
+                if (cartItem.id === id) {
+                    if (JSON.stringify(
+                            [...cartItem.selectedAttribute].sort((a,b) =>
+                            Object.keys(a)[0].localeCompare(Object.keys(b)[0]),
+                            ),
+                            ).slice(0, -3) ===
+                        JSON.stringify(
+                            [...selectedAttribute].sort((a,b) =>
+                            Object.keys(a)[0].localeCompare(Object.keys(b)[0]),
+                            ),
+                            ).slice(0, -3)
+                            ) {
+                                cart.splice(index, 1, {
+                                    ...cart[index],
+                                    qty: cart[index].qty + 1,
+                                })
+                                localStorage.setItem('data', JSON.stringify(cart));
+                    } else {
+                        counter++;
+                    }
+                }
+            })
+        : cart.push({
+            id: id,
+            brand: brand,
+            name: name,
+            attributes: attributes,
+            selectedAttribute: selectedAttribute,
+            prices: prices,
+            gallery: gallery,
+            qty: 1,
+            imageIndex: 0,
+        });
+            localStorage.setItem('data', JSON.stringify(cart));
+
+    const uniqueId = [];
+    cart.forEach(cartItem => cartItem.id === id && uniqueId.push(cartItem.id));
+
+    counter === uniqueId.length &&
+        cart.push({
+            id: id,
+            brand: brand,
+            name: name,
+            attributes: attributes,
+            selectedAttribute: selectedAttribute,
+            prices: prices,
+            gallery: gallery,
+            qty: 1,
+            imageIndex: 0
+        })
+        localStorage.setItem('data', JSON.stringify(cart));        
+    }
     dispatch({
         type: ActionTypes.ADD_TO_CART,
-        payload: {
-            cart,
-            product,    
-        }
+        payload: cart
     })
 }
 
-export const removeFromCart = (product) => async (dispatch) => {
+export const removeFromCart = (id, selectedAttribute) => async (dispatch) => {
 
     // CART
     const cart = localStorage.getItem('data') ?
             JSON.parse(localStorage.getItem('data')) :
             [];
-            
-    //TO REDUCE THE qty IN CART
-    cart.forEach(cartItem => {
-        if (cartItem.id === product.id) {
-            cartItem.qty -= 1;
-            localStorage.setItem('data', JSON.stringify(cart));
+        
+    cart.forEach((cartItem, index) => {
+        if (cartItem.id === id) {
+            if (JSON.stringify(
+                    [...cartItem.selectedAttribute].sort((a,b) =>
+                    Object.keys(a)[0].localeCompare(Object.keys(b)[0]),
+                    ),
+                    ).slice(0, -3) ===
+                JSON.stringify(
+                    [...selectedAttribute].sort((a,b) =>
+                    Object.keys(a)[0].localeCompare(Object.keys(b)[0]),
+                    ),
+                    ).slice(0, -3)
+                    ) {
+                        if (cartItem.qty>1) {
+                            cartItem.qty = cartItem.qty - 1
+                            localStorage.setItem('data', JSON.stringify(cart));
+                        } else {
+                            cart.splice(index, 1);
+                            localStorage.setItem('data', JSON.stringify(cart));
+                        }
+            }
         }
     })
-
-    // FOR EXISTING PRODUCT IN CART
-    const existingItem = cart.findIndex(cartItem =>{return cartItem.id === product.id});
-    console.log(existingItem)
-
-    //TO REMOVE ITEM FROM CART
-    if (cart[existingItem].qty === 0) {
-        cart.splice(existingItem, 1);
-        localStorage.setItem('data', JSON.stringify(cart));
-    }
     
     dispatch({
         type: ActionTypes.REMOVE_FROM_CART,
-        payload: {
-            cart,
-            product
-        }
+        payload: cart
     })
 }
 
-export const removeItem = (product) => async (dispatch) => {
-
-    // CART
-    const cart = localStorage.getItem('data') ?
-            JSON.parse(localStorage.getItem('data')) :
-            [];
-            
-// TO GET THE INDEX OF EXISTING ITEM
-    const index = cart.findIndex(cartItem => { return cartItem.id === product.id});
-
-// TO REMOVE THE ITEM FROM THE CART
-    cart.splice(index, 1);
-    localStorage.setItem('data', JSON.stringify(cart));
-    
-    dispatch({
-        type: ActionTypes.REMOVE_ITEM,
-        payload: {
-            cart,
-            product
-        }
-    })
-}
-
-export const nextImg = (product) => async (dispatch) => {
+export const nextImg = (index, imageIndex) => async (dispatch) => {
     const cart = JSON.parse(localStorage.getItem('data'));
     
-    cart.some(cartItem => {
-        if (cartItem.id === product.id) {
-            let image = cartItem.gallery;
-
-            const nextImg = () => {
-                if (cartItem.index >= image.length - 1) {
-                    cartItem.index = 0;
-                    localStorage.setItem('data', JSON.stringify(cart));
-                } else {
-                    cartItem.index = cartItem.index + 1;
-                    localStorage.setItem('data', JSON.stringify(cart));
-                }
+    let imdex = index;
+        cart.forEach((cartItem, index) => {
+            if (index === imdex) {
+                 cartItem.imageIndex = cartItem.gallery.length - 1 > cartItem.imageIndex
+                ? cartItem.imageIndex + 1
+                : 0;
+                imageIndex = cartItem.imageIndex;
             }
-            return nextImg();
-        }
-    })
-
-   
+        })
+        localStorage.setItem('data', JSON.stringify(cart));
 
     dispatch({
         type: ActionTypes.NEXT_IMAGE,
-        payload: {
-            cart,
-            product
-        }
+        payload: cart
     })
 }
 
-export const prevImg = (product) => async (dispatch) => {
+export const prevImg = (index, imageIndex) => async (dispatch) => {
     const cart = JSON.parse(localStorage.getItem('data'));
     
-    cart.forEach(cartItem => {
-        if (cartItem.id === product.id) {
-            let image = cartItem.gallery;
-
-            const prevImg = () => {
-                if (cartItem.index <= 0) {
-                    cartItem.index = image.length - 1
-                    localStorage.setItem('data', JSON.stringify(cart));
-                } else {
-                    cartItem.index = cartItem.index - 1;
-                    localStorage.setItem('data', JSON.stringify(cart));
-                }
+    let imdex = index;
+        cart.forEach((cartItem, index) => {
+            if (index === imdex) {
+                 cartItem.imageIndex = cartItem.imageIndex === 0
+                ? cartItem.gallery.length - 1
+                : cartItem.imageIndex - 1;
+                imageIndex = cartItem.imageIndex;
             }
-
-            return prevImg();
-
-        }
-    })
-
-   
+        })
+        localStorage.setItem('data', JSON.stringify(cart));
 
     dispatch({
         type: ActionTypes.PREV_IMAGE,
-        payload: {
-            cart,
-            product
-        }
+        payload: cart
     })
 }
 
@@ -184,15 +169,10 @@ export const selectAttribute = (value, name) => ({
     }
 })
 
-export const defaultAttribute = (product) => ({
+export const defaultAttribute = (inStock, attributes) => ({
     type: ActionTypes.DEFAULT_ATTRIBUTE,
-    payload: product
+    payload: {
+        inStock: inStock,
+        attributes: attributes
+    }
 })
-
-// export const defaultAttribute = (product) => async (dispatch) => {
-
-//     dispatch({
-//         type: ActionTypes.DEFAULT_ATTRIBUTE,
-//         payload: product,
-//     })
-// }

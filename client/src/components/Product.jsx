@@ -1,8 +1,8 @@
 import { PureComponent } from "react";
 import { connect } from "react-redux";
+import withRouter from "../pages/withRouter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
-import {addToCart, removeFromCart, selectAttribute, defaultAttribute} from '../redux/ActionCreators';
+import {addToCart, removeFromCart, defaultAttribute, selectAttribute} from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => ({
     currency: state.reducer.currency,
@@ -10,66 +10,57 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    addToCart: (product) => {dispatch(addToCart(product))},
-    defaultAttribute: (product) => (dispatch(defaultAttribute(product)))
+    addToCart: (id, gallery, brand, prices, name, attributes, selectedAttribute) => {dispatch(addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute))},
+    defaultAttribute: (inStock, attributes) => (dispatch(defaultAttribute(inStock, attributes)))
 })
 
 class Product extends PureComponent {
     constructor(props) {
         super(props);
-        this.defAtt = this.defAtt.bind(this)
     }
     
     componentDidMount() {
-        // this.defAtt()
         addToCart();
-        setTimeout(() => {
-            this.defAtt()
-          }, 1000)
+        this.addToCart();
+        this.defAtt();
     }
 
-    defAtt = () => {
-        this.props.products.map((product) => {
-            if (this.props.products.length) {
-                this.props.defaultAttribute(product);            
-            }
-        });
+    addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute) {
+        console.log(selectedAttribute)
+        this.props.addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute)
+    }
+
+    defAtt() {
+        this.props.defaultAttribute(this.props.inStock, this.props.attributes)
+    }
+
+    handleClick = (e, id) => {
+        if (e.target.localName !== 'button') {
+             this.props.router.navigate(`/Scandiweb/pdp/${id}`);
+        }
     }
     
     render() {
-        const {products, addToCart, categoryName, defaultAttribute} = this.props
+        const {id, inStock, gallery, brand, prices, name, attributes, addToCart, selectedAttribute } = this.props;
 
-        return (
-            <div className="content">
-                <span className="title font-42 weight-400">{categoryName()}</span>
-                <div className="container">                    
-                    <div className="row font-18">
-                        {products.length ?
-                            products.map(product => {
-                                return(
-                                    <Link key={product.id} to={product.inStock && (`pdp/${product.id}`)}>
-                                        <div className={product.inStock ? 'col-lg-4 flex col' : 'col-lg-4 flex col outOfStock'}>                            
-                                            <div className="img">
-                                                <img src={product.gallery[0]} alt="" />
-                                                {product.inStock === false && <span className="font-24 weight-400">OUT OF STOCK</span>}
-                                                {product.inStock && <span className="icon-cart" onClick={() => addToCart(product)}><FontAwesomeIcon icon='cart-shopping' className="icon" /></span>}
-                                            </div>
-                                            <span className="name">{product.brand}</span>
-                                            <span className="price weight-500">
-                                                {product.prices.map(price => 
-                                                    this.props.currency === price.currency.symbol && (this.props.currency) + (price.amount)
-                                                )}
-                                            </span>
-                                        </div>
-                                    </Link>
-                                )
-                            }) : ''
-                        }
+        return (            
+            <div className="col-lg-4">
+                <div onClick={e => inStock && this.handleClick(e, id)} className={inStock ? 'flex col' : 'flex col outOfStock'}>
+                    <div className="img">
+                        <img src={gallery[0]} alt="" />
+                        {inStock === false && <span className="font-24 weight-400">OUT OF STOCK</span>}
                     </div>
+                    {inStock && <button className="icon-cart" onClick={() => this.addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute)}><FontAwesomeIcon icon='cart-shopping' className="icon" /></button>}
+                    <span className="name">{brand}</span>
+                    <span className="price weight-500">
+                        {prices?.map(({currency, amount}) => 
+                            this.props.currency === currency.symbol && (this.props.currency) + (amount)
+                        )}
+                    </span>
                 </div>
             </div>
         )
     }    
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Product);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Product));

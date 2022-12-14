@@ -2,6 +2,7 @@ import { PureComponent } from "react";
 import '../sass/style.scss';
 import Product from "../components/Product";
 import { client } from '..';
+import withRouter from "./withRouter";
 import { QUERY_ALL_PRODUCTS } from "../FetchData/Products";
 
 class Category extends PureComponent {
@@ -10,7 +11,7 @@ class Category extends PureComponent {
     componentDidMount() {
         this.fetchProducts();
     }
-
+    
     componentDidUpdate() {
         this.fetchProducts()
     }
@@ -19,15 +20,14 @@ class Category extends PureComponent {
         const result = await client.query({
             query: QUERY_ALL_PRODUCTS,
             variables: {
-                category: 'all',
+                category: this.props.router.params.category || 'all',
             },
         });
-
         this.setState({products: result.data.category.products})
     }
 
     categoryName() {
-        const categoryName = "all";        
+        const categoryName = this.props.router.params.category || "all";        
         return categoryName[0].toUpperCase() + categoryName.substring(1);        
     }
 
@@ -36,10 +36,31 @@ class Category extends PureComponent {
         const {products} = this.state;
         return ( 
             <div className="category">
-                <Product products={products} categoryName={this.categoryName} />
+                <div className="content">
+                    <span className="title font-42 weight-400">{this.categoryName()}</span>
+                    <div className="container">                    
+                        <div className="row font-18">
+                            {products?.map(({id, inStock, gallery, brand, name, prices, attributes}, index) => {
+                                return (
+                                    <div key={index}>
+                                        <Product
+                                            id={id}
+                                            inStock={inStock}    
+                                            gallery={gallery}
+                                            brand={brand}
+                                            name={name}
+                                            prices={prices}
+                                            attributes={attributes}
+                                        />
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
 }
  
-export default (Category);
+export default withRouter(Category);

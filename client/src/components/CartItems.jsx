@@ -6,61 +6,54 @@ import {addToCart, removeFromCart, nextImg, prevImg} from '../redux/ActionCreato
 const mapStateToProps = (state) => ({
     cart: state.reducer.cart,
     subTotal: state.reducer.subTotal,
-    index: state.reducer.index,
     currency: state.reducer.currency,
     totalQuantity: state.reducer.totalQuantity,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    addToCart: (product) => {dispatch(addToCart(product))},
-    removeFromCart: (product) => {dispatch(removeFromCart(product))},
-    nextImg: (product) => {dispatch(nextImg(product))},
+    addToCart: (id, gallery, brand, prices, name, attributes, selectedAttribute, index) => {dispatch(addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute, index))},
+    removeFromCart: (id, selectedAttribute) => {dispatch(removeFromCart(id, selectedAttribute))},
+    nextImg: (index, imageIndex) => {dispatch(nextImg(index, imageIndex))},
     prevImg: (product) => {dispatch(prevImg(product))},
 })
-    
+
 class CartItems extends PureComponent {
     
     componentDidMount() {
         addToCart();
         removeFromCart();
-        nextImg();
-        prevImg();
     }
 
     render() {
         const {addToCart, removeFromCart, cart, subTotal, nextImg, prevImg, currency, totalQuantity} = this.props;
 
-
-
         return (
             <div>
-                {cart.map((cartItem, index) => {
+                {cart.map(({id, gallery, brand, prices, name, attributes, selectedAttribute, qty, imageIndex}, index) => {
                     return (
                         <section key={index}>
                             <div className="cartSection flex-btw-align">
                                 <div className="leftContent flex col">
-                                    <span className="nameBold font-30 weight-700">{cartItem.name}</span>
-                                    <span className="nameLight font-30 weight-400">{cartItem.brand}</span>
+                                    <span className="nameBold font-30 weight-700">{name}</span>
+                                    <span className="nameLight font-30 weight-400">{brand}</span>
                                     <span className="price font-24 weight-700">
-                                        {cartItem.prices.map(price => 
-                                            this.props.currency === price.currency.symbol && (this.props.currency) + (price.amount)
+                                        {prices?.map(({currency, amount}) =>
+                                            this.props.currency === currency.symbol && (this.props.currency) + (amount)
                                         )}
                                     </span>
 
-
-
-                                    {cartItem.attributes.map((attribute, index) => {
+                                    {attributes?.map(({name, type, items}, index) => {
                                         return (
                                             <div key={index} className="size flex col">
-                                                <span className="font-18 weight-700" >{attribute.name}:</span>
-                                                <div className={attribute.type === "swatch" ? 'color flex' : 'sizes flex font-16 weight-400'}>
-                                                    {attribute.type === "swatch" ? attribute.items.map((item, index) => {
+                                                <span className="font-18 weight-700" >{name}:</span>
+                                                <div className={type === "swatch" ? 'color flex' : 'sizes flex font-16 weight-400'}>
+                                                    {type === "swatch" ? items.map(({value}, index) => {
                                                         return (
-                                                            <span key={index} className="flex-center" style={cartItem.selectedAttribute.some(att => Object.keys(att)[0] === attribute.name && Object.values(att)[0] === item.value) ? {backgroundColor: `${item.value}`, outline: '1px solid #5ECE7B'} : {backgroundColor: `${item.value}`}}></span>
+                                                            <span key={index} className="flex-center" style={selectedAttribute.some(att => Object.keys(att)[0] === name && Object.values(att)[0] === value) ? {backgroundColor: `${value}`, outline: '1px solid #5ECE7B'} : {backgroundColor: `${value}`}}></span>
                                                             )
-                                                        }) : attribute.items.map((item, index) => {
+                                                        }) : items.map(({value}, index) => {
                                                         return (
-                                                            <span key={index} className="flex-center" style={cartItem.selectedAttribute.some(att => Object.keys(att)[0] === attribute.name && Object.values(att)[0] === item.value) ? { backgroundColor: '#000', color: '#fff'} : { backgroundColor: '#fff', color: '#000'}}>{item.value}</span>
+                                                            <span key={index} className="flex-center" style={selectedAttribute.some(att => Object.keys(att)[0] === name && Object.values(att)[0] === value) ? { backgroundColor: '#000', color: '#fff'} : { backgroundColor: '#fff', color: '#000'}}>{value}</span>
                                                             )
                                                         })
                                                     }
@@ -72,24 +65,24 @@ class CartItems extends PureComponent {
 
                                 <div className="rightContent flex">
                                     <div className="button flex-btw-align col">
-                                        <button className="add font-15 flex-center" onClick={()=> addToCart(cartItem)}>
+                                        <button className="add font-15 flex-center" onClick={()=> addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute, index)}>
                                             <FontAwesomeIcon icon='plus' />
                                         </button>
-                                        <span className="font-24 weight-500">{cartItem.qty}</span>
-                                        <button className="minus font-15 flex-center" onClick={()=>removeFromCart(cartItem)}>
+                                        <span className="font-24 weight-500">{qty}</span>
+                                        <button className="minus font-15 flex-center" onClick={()=>removeFromCart(id, selectedAttribute)}>
                                             <FontAwesomeIcon icon='minus' />
                                         </button>
                                     </div>
                                     <div className="content">
-                                        <img src={cartItem.gallery[cartItem.index] ? cartItem.gallery[cartItem.index] : cartItem.gallery[0]} alt="" />
-                                        <span className="icon flex">
-                                            <button onClick={() => prevImg(cartItem)} className="arrow flex-center font-15">
+                                        <img src={imageIndex ? gallery[imageIndex] : gallery[0]} alt="" />
+                                        {gallery.length > 1 && <span className="icon flex">
+                                            <button onClick={() => prevImg(index, imageIndex)} className="arrow flex-center font-15">
                                                 <FontAwesomeIcon icon='chevron-left' />
                                             </button>
-                                            <button onClick={() => nextImg(cartItem)} className="arrow flex-center font-15">
+                                            <button onClick={() => nextImg(index, imageIndex)} className="arrow flex-center font-15">
                                                 <FontAwesomeIcon icon='chevron-right' />
                                             </button>
-                                        </span>
+                                        </span>}
                                     </div>
                                 </div>
                             </div>

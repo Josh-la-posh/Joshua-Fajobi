@@ -38,45 +38,45 @@ export const QUERY_ALL_CATEGORIES = gql`
 
 // A SINGLE PRODUCT
 
-export const QUERY_PRODUCT = gql`
-  query GetProduct($id: String!) {
-    product (id: $id) {
-      id
-      name
-      inStock
-      gallery
-      description
-      category
-      attributes {
-        id
-        name
-        type
-        items {
-          id
-          value
-        }
-      }
-      prices {
-        currency {
-          label
-          symbol
-        }
-        amount
-      }
-      brand
+// export const QUERY_PRODUCT = gql`
+//   query GetProduct($id: String!) {
+//     product (id: $id) {
+//       id
+//       name
+//       inStock
+//       gallery
+//       description
+//       category
+//       attributes {
+//         id
+//         name
+//         type
+//         items {
+//           id
+//           value
+//         }
+//       }
+//       prices {
+//         currency {
+//           label
+//           symbol
+//         }
+//         amount
+//       }
+//       brand
     
-    }
+//     }
     
-  }
-`
+//   }
+// `
 
 
-// FOR CURRENCIES
+// // FOR CURRENCIES
 
-export const QUERY_CURRENCIES = gql`
-  query GetCurrencies {
-      currencies {
-          label
-          symbol
-      }
-  }`
+// export const QUERY_CURRENCIES = gql`
+//   query GetCurrencies {
+//       currencies {
+//           label
+//           symbol
+//       }
+//   }`

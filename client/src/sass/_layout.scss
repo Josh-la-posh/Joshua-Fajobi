@@ -27,92 +27,95 @@
             grid-column-gap: 2.5rem;
             grid-row-gap: 6.438rem;
 
-        @include laptop {grid-colum-gap: 3.23%; gap-row-gap: 7.7%;}
+            @include laptop {grid-colum-gap: 3.23%; gap-row-gap: 7.7%;}
 
-            a {text-decoration: none;}
-            
+        
             .col-lg-4 {
                 padding: 0.688rem 0.938rem 1rem;
-                color: var(--pri-color);
                 max-height: 27.75rem;
                 @include laptop {padding: 2.69% 3.89% 3.6%;}
 
-                .img {
-                    position: relative;
-                    margin-bottom: 1.5rem;
-                    max-width: 22.25rem;
-                    height: 21.125rem;
-                    @include laptop {
-                        margin-bottom: 6.8%;
-                        // height: unset;
-                        max-height: 338px;
-                    
-                    }
-                    
-                    img {
-                        height: 100%;
-                        width: 100%;
-                        object-fit: contain;
-                    }
-                    span {
-                        position: absolute;
-                        left: 0;
-                        right: 0;
-                        top: 50%;
-                        bottom: 0;
-                        transform: translateY(-20%);
-                        text-align: center;
-                        display: none;
-                    }
-                }
-                span {
-                    &.name {
-                        font-weight: 300;
-                    }
-                    &.price {
-                        margin-top: 0.688rem;
-                        @include laptop {margin-top: 3.1%;}
-                    }                
-                }
-                
                 &:hover {
                     box-shadow: 0px 2px 10px 2px #ddd;
+                }
+                
+                div {
+                    text-decoration: none;
+                    color: var(--pri-color);
+                    position: relative;
+                    
+                    .img {
+                        position: relative;
+                        margin-bottom: 1.5rem;
+                        max-width: 22.25rem;
+                        height: 21.125rem;
+                        @include laptop {
+                            margin-bottom: 6.8%;
+                            // height: unset;
+                            max-height: 338px;                    
+                        }                    
+                        img {
+                            height: 100%;
+                            width: 100%;
+                            object-fit: contain;
+                        }
+                        span {
+                            position: absolute;
+                            left: 0;
+                            right: 0;
+                            top: 50%;
+                            bottom: 0;
+                            text-align: center;
+                            display: none;
+                        }
+                    }
 
-                    & .img span.icon-cart {
+                    .icon-cart {
                         background-color: var(--active-color);
                         height: 3.125rem;
                         width: 3.125rem;
                         border-radius: 50%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
+                        border: none;
                         color: #fff;
-                        visibility: visible;
+                        display: none;
 
                         position: absolute;
-                        top: unset;
-                        left: unset;
-                        bottom: -1.25rem;
+                        bottom: 3.625rem;
                         right: 1rem;
+                        
+                    }
 
-                        // @include laptop {width: 2.5rem; height: 2.5rem;}
-                        // @include tablet {width: 30px; height: 30px; bottom: -17px;}
-                        // @include mobile {width: 25px; height: 25px; bottom: -12px; right: 0.5rem;}
+                    span {
+                        &.name {
+                            font-weight: 300;
+                        }
+                        &.price {
+                            margin-top: 0.688rem;
+                            @include laptop {margin-top: 3.1%;}
+                        }                
+                    }                    
+                        
+                }
+                .outOfStock {
+                    color: var(--fade-color);
+
+                    .img {
+                        opacity: 0.5;
+
+                        span:nth-child(2) {
+                            display: unset;
+                            // @include laptop {font-size: 18px;}
+                            // @include tablet {font-size: 14px;}
+                            // @include mobile {font-size: 10px;}
+                        }
                     }
                 }
-            }
-            .outOfStock {
-                color: var(--fade-color);
 
-                .img {
-                    opacity: 0.5;
-
-                    span:nth-child(2) {
-                        display: unset;
-                        // @include laptop {font-size: 18px;}
-                        // @include tablet {font-size: 14px;}
-                        // @include mobile {font-size: 10px;}
-                    }
+                &:hover .icon-cart {
+                    display: block;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
             }
         }

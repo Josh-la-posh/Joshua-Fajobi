@@ -8,18 +8,24 @@ const mapStateToProps = (state) => ({
     cart: state.reducer.cart,
     currency: state.reducer.currency,
     subTotal: state.reducer.subTotal,
-    totalQuantity: state.reducer.totalQuantity
+    totalQuantity: state.reducer.totalQuantity,
+    qty: state.reducer.qty,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    addToCart: (product) => {dispatch(addToCart(product))},
-    removeFromCart: (product) => {dispatch(removeFromCart(product))}
+    addToCart: (id, gallery, brand, prices, name, attributes, selectedAttribute, index) => {dispatch(addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute, index))},
+    removeFromCart: (id, selectedAttribute) => {dispatch(removeFromCart(id, selectedAttribute))}
 })
 
 class CategoryOverlay extends PureComponent {
     componentDidMount() {
         addToCart();
         removeFromCart();
+    }
+
+
+    handleQuantity(id, gallery, brand, prices, name, attributes, selectedAttribute, index) {
+        this.props.addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute, index)
     }
 
     render() {
@@ -32,31 +38,31 @@ class CategoryOverlay extends PureComponent {
                 </p>
 
                 <div className="overlayContent">
-                    {cart.map((cartItem, index) => {
+                    {cart?.map(({id, gallery, brand, prices, name, attributes, selectedAttribute, qty}, index) => {
                         return (
                             <section className="flex" key={index}>
                                     <div className="leftContent flex col font-16">
-                                        <span className="weight-300">{cartItem.name}</span>
-                                        <span className="nameLight weight-300">{cartItem.brand}</span>
+                                        <span className="weight-300">{name}</span>
+                                        <span className="nameLight weight-300">{brand}</span>
                                         <span className="price weight-500">
-                                            {cartItem.prices.map(price => 
-                                                this.props.currency === price.currency.symbol && (this.props.currency) + (price.amount)
+                                            {prices?.map(({currency, amount}) => 
+                                                this.props.currency === currency.symbol && (this.props.currency) + (amount)
                                             )}
                                         </span>
 
 
-                                        {cartItem.attributes.map(attribute => {
+                                        {attributes?.map(({id, name, type, items}, index) => {
                                             return (
-                                                <div key={attribute.id} className="size flex col font-14 weight-400">
-                                                    <span>{attribute.name}:</span>
-                                                    <div className={attribute.type === "swatch" ? 'color flex' : 'sizes flex'}>
-                                                        {attribute.type === "swatch" ? attribute.items.map((item, index) => {
+                                                <div key={index} className="size flex col font-14 weight-400">
+                                                    <span>{name}:</span>
+                                                    <div className={type === "swatch" ? 'color flex' : 'sizes flex'}>
+                                                        {type === "swatch" ? items.map(({value}, index) => {
                                                             return (
-                                                                <span key={index} className="flex-center" style={cartItem.selectedAttribute.some(att => Object.keys(att)[0] === attribute.name && Object.values(att)[0] === item.value) ? {backgroundColor: `${item.value}`, outline: '1px solid #5ECE7B'} : {backgroundColor: `${item.value}`}}></span>
+                                                                <span key={index} className="flex-center" style={selectedAttribute.some(att => Object.keys(att)[0] === name && Object.values(att)[0] === value) ? {backgroundColor: `${value}`, outline: '1px solid #5ECE7B'} : {backgroundColor: `${value}`}}></span>
                                                             )
-                                                        }) : attribute.items.map((item, index) => {
+                                                        }) : items.map(({value}, index) => {
                                                             return (
-                                                                <span key={index} className="flex-center" style={cartItem.selectedAttribute.some(att => Object.keys(att)[0] === attribute.name && Object.values(att)[0] === item.value) ? { backgroundColor: '#000', color: '#fff'} : { backgroundColor: '#fff', color: '#000'}}>{item.value}</span>
+                                                                <span key={index} className="flex-center" style={selectedAttribute.some(att => Object.keys(att)[0] === name && Object.values(att)[0] === value) ? { backgroundColor: '#000', color: '#fff'} : { backgroundColor: '#fff', color: '#000'}}>{value}</span>
                                                             )
                                                         })
                                                     }
@@ -69,16 +75,16 @@ class CategoryOverlay extends PureComponent {
 
                                     <div className="rightContent flex">
                                         <div className="button flex-btw-align col">
-                                            <button className="add flex-center font-14" onClick={() => {addToCart(cartItem)}}>
+                                            <button className="add flex-center font-14" onClick={() => addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute, index)}>
                                                 <FontAwesomeIcon icon='plus' />
                                             </button>
-                                            <span className="weight-500">{cartItem.qty}</span>
-                                            <button className="minus flex-center font-14" onClick={() => {removeFromCart(cartItem)}}>
+                                            <span className="weight-500">{qty}</span>
+                                            <button className="minus flex-center font-14" onClick={() => {removeFromCart(id, selectedAttribute)}}>
                                                 <FontAwesomeIcon icon='minus' />
                                             </button>
                                         </div>
                                         <div className="content">
-                                            <img src={cartItem.gallery[0]} alt="" />                                
+                                            <img src={gallery[0]} alt="" />                                
                                         </div>
                                     </div>
                             </section>

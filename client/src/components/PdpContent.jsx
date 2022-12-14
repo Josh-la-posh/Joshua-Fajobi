@@ -1,6 +1,6 @@
 import { PureComponent } from "react";
 import { connect } from 'react-redux';
-import {addToCart, selectAttribute, defaultAttribute} from '../redux/ActionCreators';
+import {addToCart, selectAttribute} from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => ({
     cart: state.reducer.cart,
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    addToCart: (product) => {dispatch(addToCart(product))},
+    addToCart: (id, gallery, brand, prices, name, attributes, selectedAttribute) => {dispatch(addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute))},
     selectAttribute: (value, name) => {dispatch(selectAttribute(value, name))},
 })
 
@@ -35,14 +35,14 @@ class PdpContent extends PureComponent {
 
                 <div className="product flex">
                     <div className="colorChange flex col">
-                        {product.gallery.map(image => {
+                        {product.gallery?.map(image => {
                             return (
                                 <img key={image} onClick={(e) => this.currentImg(e)} src={image} alt="" />
                             )
                         })}
                     </div>
                     <div className="image">
-                        <img src={this.state.displayedImg === '' ? product.gallery[0] : this.state.displayedImg} alt="" />
+                        <img src={this.state.displayedImg === '' ? product.gallery : this.state.displayedImg} alt="" />
                     </div>
                 </div>
 
@@ -55,14 +55,14 @@ class PdpContent extends PureComponent {
 
                     {/* FOR SIZES */}
 
-                    {product.attributes.map(attribute => {
+                    {product.attributes?.map(({name, type, items}, index) => {
                         return (
-                            <div key={attribute.id} className="size flex col font-18 weight-700">
-                                <span>{attribute.name}:</span>
-                                <div className={attribute.type === 'swatch' ? 'color flex swatch' : 'sizes flex font-16 text'}>
-                                    {attribute.items.map((item, index) => {
+                            <div key={index} className="size flex col font-18 weight-700">
+                                <span>{name}:</span>
+                                <div className={type === 'swatch' ? 'color flex swatch' : 'sizes flex font-16 text'}>
+                                    {items?.map(({value}, index) => {
                                         return (
-                                            <span key={index} className='flex-center checkmark' style={selectedAttribute.some(att => Object.keys(att)[0] === attribute.name && Object.values(att)[0] === item.value) ? (attribute.type === 'swatch' ? {backgroundColor: `${item.value}`, outline: '1px solid #5ECE7B'} : { backgroundColor: '#000', color: '#fff'}) : (attribute.type === 'swatch' ? {backgroundColor: `${item.value}`} : { backgroundColor: '#fff', color: '#000'})} onClick={() => {selectAttribute(item.value, attribute.name)}}>{attribute.type !== 'swatch' && item.value}</span>
+                                            <span key={index} className='flex-center' style={selectedAttribute.some(att => Object.keys(att)[0] === name && Object.values(att)[0] === value) ? (type === 'swatch' ? {backgroundColor: `${value}`, outline: '1px solid #5ECE7B'} : { backgroundColor: '#000', color: '#fff'}) : (type === 'swatch' ? {backgroundColor: `${value}`} : { backgroundColor: '#fff', color: '#000'})} onClick={() => {selectAttribute(value, name)}}>{type !== 'swatch' && value}</span>
                                         )
                                     })
                                 }
@@ -73,14 +73,14 @@ class PdpContent extends PureComponent {
                     
                     <div className="size flex col font-18 weight-700">
                         <span>PRICES:</span>
-                            {product.prices.map(price =>
-                                this.props.currency === price.currency.symbol && (this.props.currency) + (price.amount)                                            
+                            {product.prices?.map(({currency, amount}) =>
+                                this.props.currency === currency.symbol && (this.props.currency) + (amount)                                            
                             )}
                     </div>
 
 
-                    <button className="font-16 weight-600" onClick={() => addToCart(product)}>ADD TO CART</button>
-                    <p className="font-16 weight-400" >{product.description.replace(/<[^>]+>/g, '')}</p>
+                    <button className="font-16 weight-600" onClick={() => addToCart(product.id, product.gallery, product.brand, product.prices, product.name, product.attributes, selectedAttribute)}>ADD TO CART</button>
+                    <p className="font-16 weight-400" >{product.description?.replace(/<[^>]+>/g, '')}</p>
                 </div>
             </div>
         );
