@@ -1,33 +1,41 @@
 .header {
     height: 5rem;
     padding: 0rem 6.313rem 0.25rem;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 10;
 
     .categories {
+        list-style: none;
         gap: 2rem;
         margin-left: 1rem;
 
-        a {
-            color: var(--pri-color);
-            font-weight: 400;
-            text-transform: uppercase;
-        
-            &:active {
-                color: var(--active-color);
-                position: relative;
-                font-weight: 600;
-                
-                &::before {
-                    content: '';
-                    background-color: var(--active-color);
-                    width: calc(100% + 2rem);
-                    position: absolute;
-                    height: 0.125rem;
-                    left: -1rem;
-                    bottom: -1.875rem;
+        li {
+            a {
+                color: var(--pri-color);
+                font-weight: 400;
+                text-transform: uppercase;
+            
+                &:active, &:focus {
+                    color: var(--active-color);
+                    position: relative;
+                    font-weight: 600;
+                    
+                    &::before {
+                        content: '';
+                        background-color: var(--active-color);
+                        width: calc(100% + 2rem);
+                        position: absolute;
+                        height: 0.125rem;
+                        left: -1rem;
+                        bottom: -1.875rem;
+                    }
                 }
-            }
-            &:hover {
-                color: var(--active-color);
+                &:hover {
+                    color: var(--active-color);
+                }
             }
         }
     }
@@ -46,6 +54,10 @@
             gap: 5px;
             color: var(--pri-color);
             cursor: pointer;
+
+            .arrow {
+                stroke: #000;
+            }
             
             &.icon {
                 position: relative;

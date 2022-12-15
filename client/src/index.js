@@ -6,10 +6,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCartShopping, faChevronDown, faChevronUp, faDollarSign, faEuroSign, faYenSign, faChevronRight, faChevronLeft, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faChevronRight, faChevronLeft, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ConfigureStore } from './redux/ConfigureStore';
 
-library.add(faCartShopping, faChevronDown, faChevronUp, faDollarSign, faEuroSign, faYenSign, faChevronRight, faChevronLeft, faPlus, faMinus)
+library.add(faCartShopping, faChevronRight, faChevronLeft, faPlus, faMinus )
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),

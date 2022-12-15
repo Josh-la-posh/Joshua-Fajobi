@@ -1,9 +1,11 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import '../sass/style.scss';
+import {ReactComponent as CartIcon} from '../icons/cart.svg';
+import {ReactComponent as Logo} from '../icons/logo.svg';
+import {ReactComponent as Arrow} from '../icons/arrow.svg';
 import { client } from "..";
 import withRouter from "../pages/withRouter";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CurrencySwitcher from "./CurrencySwitcher";
 import CategoryOveray from "./CategoryOverlay";
 import { Link } from "react-router-dom";
@@ -28,17 +30,26 @@ class Header extends PureComponent {
 
     componentDidMount() {
         this.categoryNames();
-        document.body.addEventListener('click', this.closeDropDown);
+        document.body.addEventListener('click', this.closeDropDown);        
     }
 
     componentWillUnount() {
         document.body.removeEventListener('click', this.closeDropDown)        
     }
 
+    handleClick = (e, name, index) => {
+        var li = document.getElementsByName('a');
+        console.log(li)
+        return index
+    }
+
     closeDropDown = (e) => {
         if ((this.state.isCartToggled && this.state.isCurrencyToggled)) {
             if (this.myCartRef && !this.myCartRef.current.contains(e.target) && this.myCurrencyRef && !this.myCurrencyRef.current.contains(e.target)) {
                 this.setState({isCartToggled: false});
+                this.setState({isCurrencyToggled: false});
+            } else if (this.myCartRef && this.myCartRef.current.contains(e.target) && this.myCurrencyRef && !this.myCurrencyRef.current.contains(e.target)) {
+                this.setState({isCartToggled: true});
                 this.setState({isCurrencyToggled: false});
             }
         } else if (!this.state.isCartToggled && this.state.isCurrencyToggled) {
@@ -47,19 +58,12 @@ class Header extends PureComponent {
             }
         } else if (this.state.isCartToggled && !this.state.isCurrencyToggled) {
             if (this.myCartRef && !this.myCartRef.current.contains(e.target) && this.myCurrencyRef && this.myCurrencyRef.current.contains(e.target)) {
-                this.setState({isCartToggled: false});
+                this.setState({isCurrencyToggled: false});
                 this.setState({isCartToggled: true});
             } 
             else if (this.myCartRef && !this.myCartRef.current.contains(e.target)) {
                 this.setState({isCartToggled: false});
             }
-        }
-
-        if (this.state.isCartToggled || (this.state.isCartToggled && this.myCurrencyRef.current.contains(e.target))) {
-            document.body.style.background = 'rgba(57, 55, 72, 0.22)';
-        } else {
-            document.body.style.background = '#fff'
-            // document.body.getElementsByClassName("header").style.background = '#fff'
         }
     }
 
@@ -78,26 +82,30 @@ class Header extends PureComponent {
 
     render() {
         const { categories, isCartToggled, isCurrencyToggled } = this.state;
-        const {totalQuantity, currency} = this.props
+        const {totalQuantity, currency} = this.props;
 
         return (
             <div className="header flex-btw-align">
-                <div className="categories flex font-16">
+                <ul className="categories flex font-16">
                     {categories?.map(({name}, index) => {
                         return (
-                            <Link to={`/Scandiweb/category/${name}`} key={index}>{name}</Link>
+                            <li key={index}>
+                                <Link to={`/Scandiweb/category/${name}`} className="b">{name}</Link>
+                            </li>
                         )
                     })}
-                </div>
+                </ul>
+                <Link to='/Scandiweb/'><Logo /></Link>
                 <div className="icons flex">
-                    <span className="flex flex-end" ref={this.myCurrencyRef} onClick={this.toggleCurrencyIcon}>
+                    <span className="flex-center" ref={this.myCurrencyRef} onClick={this.toggleCurrencyIcon}>
                         <span className="font-21">{currency}</span>
-                        <FontAwesomeIcon icon='chevron-down' className="down font-12" style={isCurrencyToggled ? {display: 'none'} : {display: 'block'}}/>
-                        <FontAwesomeIcon icon='chevron-up' className="up font-12" style={isCurrencyToggled ? {display: 'block'} : {display: 'none'}}/>
-                        {isCurrencyToggled && <CurrencySwitcher currency={currency}/>}
+                        <Arrow className="arrow" style={isCurrencyToggled ? {transform: 'rotate(180deg'} : {transform: ''}}/>
+                        <span>
+                            {isCurrencyToggled && <CurrencySwitcher currency={currency}/>}
+                        </span>
                     </span>
                     <span className="icon" ref={this.myCartRef}>
-                        <div onClick={this.toggleCartIcon}><FontAwesomeIcon icon='cart-shopping' className="font-18"/><span className="flex-center quantity">{totalQuantity ? totalQuantity : 0}</span></div>
+                        <div onClick={this.toggleCartIcon}><CartIcon className="font-18"/><span className="flex-center quantity">{totalQuantity ? totalQuantity : 0}</span></div>
                         {isCartToggled && <CategoryOveray toggle={this.toggleCartIcon}/>}
                     </span>
                 </div>

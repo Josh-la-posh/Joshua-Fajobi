@@ -1,47 +1,50 @@
-import { PureComponent } from "react";
+import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import withRouter from "../pages/withRouter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {addToCart, removeFromCart, defaultAttribute, selectAttribute} from '../redux/ActionCreators';
+import {addToCart} from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => ({
     currency: state.reducer.currency,
-    selectedAttribute: state.reducer.selectedAttribute
 })
 
 const mapDispatchToProps = (dispatch) => ({
     addToCart: (id, gallery, brand, prices, name, attributes, selectedAttribute) => {dispatch(addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute))},
-    defaultAttribute: (inStock, attributes) => (dispatch(defaultAttribute(inStock, attributes)))
 })
 
 class Product extends PureComponent {
     constructor(props) {
         super(props);
+        this.state = {selectedAttribute: []}
+        this.myButtonRef = React.createRef();
     }
     
     componentDidMount() {
         addToCart();
-        this.addToCart();
-        this.defAtt();
+        this.defAtt()
     }
-
-    addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute) {
-        console.log(selectedAttribute)
-        this.props.addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute)
-    }
-
-    defAtt() {
-        this.props.defaultAttribute(this.props.inStock, this.props.attributes)
-    }
+	
+	defAtt = () => {
+		const selectedAttribute = this.props.inStock
+		? this.props.attributes.reduce((selectedAttribute, { name, items }) => {
+			selectedAttribute.push({ [name]: items[0].value });
+			return selectedAttribute;
+		}, [])
+		: [];
+		
+		this.setState({
+			selectedAttribute: selectedAttribute,
+		});
+	};
 
     handleClick = (e, id) => {
-        if (e.target.localName !== 'button') {
+        if (!this.myButtontRef && !this.myButtonRef.current.contains(e.target)) {
              this.props.router.navigate(`/Scandiweb/pdp/${id}`);
         }
     }
     
     render() {
-        const {id, inStock, gallery, brand, prices, name, attributes, addToCart, selectedAttribute } = this.props;
+        const {id, inStock, gallery, brand, prices, name, attributes, addToCart } = this.props;
 
         return (            
             <div className="col-lg-4">
@@ -50,7 +53,7 @@ class Product extends PureComponent {
                         <img src={gallery[0]} alt="" />
                         {inStock === false && <span className="font-24 weight-400">OUT OF STOCK</span>}
                     </div>
-                    {inStock && <button className="icon-cart" onClick={() => this.addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute)}><FontAwesomeIcon icon='cart-shopping' className="icon" /></button>}
+                    {inStock && <span ref={this.myButtonRef} className="icon-cart" onClick={() => addToCart(id, gallery, brand, prices, name, attributes, this.state.selectedAttribute)}><FontAwesomeIcon icon='cart-shopping' className="icon" /></span>}
                     <span className="name">{brand}</span>
                     <span className="price weight-500">
                         {prices?.map(({currency, amount}) => 

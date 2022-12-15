@@ -70,36 +70,25 @@ export const addToCart = (id, gallery, brand, prices, name, attributes, selected
     })
 }
 
-export const removeFromCart = (id, selectedAttribute) => async (dispatch) => {
+export const removeFromCart = (index) => async (dispatch) => {
 
     // CART
     const cart = localStorage.getItem('data') ?
             JSON.parse(localStorage.getItem('data')) :
             [];
         
-    cart.forEach((cartItem, index) => {
-        if (cartItem.id === id) {
-            if (JSON.stringify(
-                    [...cartItem.selectedAttribute].sort((a,b) =>
-                    Object.keys(a)[0].localeCompare(Object.keys(b)[0]),
-                    ),
-                    ).slice(0, -3) ===
-                JSON.stringify(
-                    [...selectedAttribute].sort((a,b) =>
-                    Object.keys(a)[0].localeCompare(Object.keys(b)[0]),
-                    ),
-                    ).slice(0, -3)
-                    ) {
-                        if (cartItem.qty>1) {
-                            cartItem.qty = cartItem.qty - 1
-                            localStorage.setItem('data', JSON.stringify(cart));
-                        } else {
-                            cart.splice(index, 1);
-                            localStorage.setItem('data', JSON.stringify(cart));
-                        }
+    let imdex = index;
+        cart.forEach((cartItem, index) => {
+            if (index === imdex) {
+                if (cartItem.qty>1) {
+                    cartItem.qty = cartItem.qty - 1
+                    localStorage.setItem('data', JSON.stringify(cart));
+                } else {
+                    cart.splice(index, 1);
+                    localStorage.setItem('data', JSON.stringify(cart));
+                }
             }
-        }
-    })
+        })
     
     dispatch({
         type: ActionTypes.REMOVE_FROM_CART,
@@ -162,17 +151,9 @@ export const selectCurrency = (currency) => async (dispatch) => {
 }
 
 export const selectAttribute = (value, name) => ({
-    type: ActionTypes.SELECT_SIZE,
+    type: ActionTypes.SELECT_ATTRIBUTE,
     payload: {
         name,
         value
-    }
-})
-
-export const defaultAttribute = (inStock, attributes) => ({
-    type: ActionTypes.DEFAULT_ATTRIBUTE,
-    payload: {
-        inStock: inStock,
-        attributes: attributes
     }
 })

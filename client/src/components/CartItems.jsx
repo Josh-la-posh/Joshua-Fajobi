@@ -5,14 +5,13 @@ import {addToCart, removeFromCart, nextImg, prevImg} from '../redux/ActionCreato
 
 const mapStateToProps = (state) => ({
     cart: state.reducer.cart,
-    subTotal: state.reducer.subTotal,
     currency: state.reducer.currency,
     totalQuantity: state.reducer.totalQuantity,
 })
 
 const mapDispatchToProps = (dispatch) => ({
     addToCart: (id, gallery, brand, prices, name, attributes, selectedAttribute, index) => {dispatch(addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute, index))},
-    removeFromCart: (id, selectedAttribute) => {dispatch(removeFromCart(id, selectedAttribute))},
+    removeFromCart: (index) => {dispatch(removeFromCart(index))},
     nextImg: (index, imageIndex) => {dispatch(nextImg(index, imageIndex))},
     prevImg: (product) => {dispatch(prevImg(product))},
 })
@@ -25,8 +24,17 @@ class CartItems extends PureComponent {
     }
 
     render() {
-        const {addToCart, removeFromCart, cart, subTotal, nextImg, prevImg, currency, totalQuantity} = this.props;
+        const {addToCart, removeFromCart, cart, nextImg, prevImg, currency, totalQuantity} = this.props;
 
+        let totalAmount = cart.reduce((total, product) => {
+            product.prices?.forEach(({ currency, amount}) => {
+                if (currency.symbol === this.props.currency) {
+                    total = total + amount * product.qty;
+                }
+            });
+            return total;
+        }, 0)
+        
         return (
             <div>
                 {cart.map(({id, gallery, brand, prices, name, attributes, selectedAttribute, qty, imageIndex}, index) => {
@@ -69,7 +77,7 @@ class CartItems extends PureComponent {
                                             <FontAwesomeIcon icon='plus' />
                                         </button>
                                         <span className="font-24 weight-500">{qty}</span>
-                                        <button className="minus font-15 flex-center" onClick={()=>removeFromCart(id, selectedAttribute)}>
+                                        <button className="minus font-15 flex-center" onClick={()=>removeFromCart(index)}>
                                             <FontAwesomeIcon icon='minus' />
                                         </button>
                                     </div>
@@ -95,7 +103,7 @@ class CartItems extends PureComponent {
                         <tbody>
                             <tr className="font-24 weight-400">
                                 <td>Tax 21%:</td>
-                                <td><span className="weight-700">{currency}{(0.21 * subTotal).toFixed(2)}</span></td>
+                                <td><span className="weight-700">{currency}{(0.21 * totalAmount).toFixed(2)}</span></td>
                             </tr>
                             <tr className="font-24 weight-400">
                                 <td>Quantity:</td>
@@ -103,7 +111,7 @@ class CartItems extends PureComponent {
                             </tr>
                             <tr className="font-24 weight-400">
                                 <td className="weight-500">Total:</td>
-                                <td><span className="weight-700">{currency}{Number(subTotal).toFixed(2)}</span></td>
+                                <td><span className="weight-700">{currency}{Number(totalAmount).toFixed(2)}</span></td>
                             </tr>
                         </tbody>
                     </table>
