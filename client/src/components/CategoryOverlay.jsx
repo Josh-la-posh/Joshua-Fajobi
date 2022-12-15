@@ -1,5 +1,4 @@
 import { PureComponent } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { connect } from 'react-redux';
 import {addToCart, removeFromCart} from '../redux/ActionCreators';
 import { Link } from "react-router-dom";
@@ -51,8 +50,8 @@ class CategoryOverlay extends PureComponent {
                             return (
                                 <section className="flex" key={index}>
                                         <div className="leftContent flex col font-16">
-                                            <span className="weight-300">{name}</span>
-                                            <span className="nameLight weight-300">{brand}</span>
+                                            <span className="weight-300">{brand}</span>
+                                            <span className="nameLight weight-300">{name}</span>
                                             <span className="price weight-500">
                                                 {prices?.map(({currency, amount}) => 
                                                     this.props.currency === currency.symbol && (this.props.currency) + (amount)
@@ -85,11 +84,11 @@ class CategoryOverlay extends PureComponent {
                                         <div className="rightContent flex">
                                             <div className="button flex-btw-align col">
                                                 <button className="add flex-center font-14" onClick={() => addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute, index)}>
-                                                    <FontAwesomeIcon icon='plus' />
+                                                    <span className="font-18">+</span>
                                                 </button>
                                                 <span className="weight-500">{qty}</span>
                                                 <button className="minus flex-center font-14" onClick={() => {removeFromCart(index)}}>
-                                                    <FontAwesomeIcon icon='minus' />
+                                                    <span className="font-18">-</span>
                                                 </button>
                                             </div>
                                             <div className="content">

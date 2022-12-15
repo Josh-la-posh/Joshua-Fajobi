@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import {BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
-import Category from "./pages/Category";
+import Category from "./pages/CategoryList";
 import Cart from "./pages/Cart";
 import PDP from "./pages/PDP";
 

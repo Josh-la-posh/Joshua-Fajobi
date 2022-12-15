@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
+import {ReactComponent as CartIcon} from '../icons/cart.svg';
 import withRouter from "../pages/withRouter";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {addToCart} from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => ({
@@ -53,7 +53,7 @@ class Product extends PureComponent {
                         <img src={gallery[0]} alt="" />
                         {inStock === false && <span className="font-24 weight-400">OUT OF STOCK</span>}
                     </div>
-                    {inStock && <span ref={this.myButtonRef} className="icon-cart" onClick={() => addToCart(id, gallery, brand, prices, name, attributes, this.state.selectedAttribute)}><FontAwesomeIcon icon='cart-shopping' className="icon" /></span>}
+                    {inStock && <span ref={this.myButtonRef} className="icon-cart" onClick={() => addToCart(id, gallery, brand, prices, name, attributes, this.state.selectedAttribute)}><CartIcon/></span>}
                     <span className="name">{brand}</span>
                     <span className="price weight-500">
                         {prices?.map(({currency, amount}) => 

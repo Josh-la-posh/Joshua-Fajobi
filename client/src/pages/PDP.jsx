@@ -1,7 +1,7 @@
 import { PureComponent } from "react";
 import { client } from "..";
 import withRouter from "./withRouter";
-import PdpContent from "../components/PdpContent";
+import PdpContent from "../components/PdpPage";
 import { GET_PRODUCT } from "../FetchData/Product";
 
 class PDP extends PureComponent {

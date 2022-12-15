@@ -1,6 +1,6 @@
 import { PureComponent } from "react";
 import '../sass/style.scss';
-import Product from "../components/Product";
+import Product from "../components/ProductPage";
 import { client } from '..';
 import withRouter from "./withRouter";
 import { QUERY_ALL_PRODUCTS } from "../FetchData/Products";

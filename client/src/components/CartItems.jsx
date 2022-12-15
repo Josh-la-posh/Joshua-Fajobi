@@ -1,6 +1,6 @@
 import { PureComponent } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { connect } from 'react-redux';
+import {ReactComponent as Arrow} from '../icons/arrow.svg';
 import {addToCart, removeFromCart, nextImg, prevImg} from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => ({
@@ -42,8 +42,8 @@ class CartItems extends PureComponent {
                         <section key={index}>
                             <div className="cartSection flex-btw-align">
                                 <div className="leftContent flex col">
-                                    <span className="nameBold font-30 weight-700">{name}</span>
-                                    <span className="nameLight font-30 weight-400">{brand}</span>
+                                    <span className="nameBold font-30 weight-700">{brand}</span>
+                                    <span className="nameLight font-30 weight-400">{name}</span>
                                     <span className="price font-24 weight-700">
                                         {prices?.map(({currency, amount}) =>
                                             this.props.currency === currency.symbol && (this.props.currency) + (amount)
@@ -74,21 +74,21 @@ class CartItems extends PureComponent {
                                 <div className="rightContent flex">
                                     <div className="button flex-btw-align col">
                                         <button className="add font-15 flex-center" onClick={()=> addToCart(id, gallery, brand, prices, name, attributes, selectedAttribute, index)}>
-                                            <FontAwesomeIcon icon='plus' />
+                                            <span className="font-24">+</span>
                                         </button>
                                         <span className="font-24 weight-500">{qty}</span>
                                         <button className="minus font-15 flex-center" onClick={()=>removeFromCart(index)}>
-                                            <FontAwesomeIcon icon='minus' />
+                                            <span className="font-24">-</span>
                                         </button>
                                     </div>
                                     <div className="content">
                                         <img src={imageIndex ? gallery[imageIndex] : gallery[0]} alt="" />
                                         {gallery.length > 1 && <span className="icon flex">
                                             <button onClick={() => prevImg(index, imageIndex)} className="arrow flex-center font-15">
-                                                <FontAwesomeIcon icon='chevron-left' />
+                                                <Arrow style={{stroke: 'white', width: '24', height: '24', transform: 'rotate(90deg'}}/>
                                             </button>
                                             <button onClick={() => nextImg(index, imageIndex)} className="arrow flex-center font-15">
-                                                <FontAwesomeIcon icon='chevron-right' />
+                                                <Arrow style={{stroke: 'white', width: '24', height: '24', transform: 'rotate(-90deg'}}/>
                                             </button>
                                         </span>}
                                     </div>
