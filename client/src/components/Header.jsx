@@ -90,12 +90,12 @@ class Header extends PureComponent {
                     {categories?.map(({name}, index) => {
                         return (
                             <li key={index}>
-                                <Link to={`/Scandiweb/category/${name}`} className="b">{name}</Link>
+                                <Link to={`/scandiweb/category/${name}`}>{name}</Link>
                             </li>
                         )
                     })}
                 </ul>
-                <Link to='/Scandiweb/'><Logo /></Link>
+                <Link to='/scandiweb/'><Logo /></Link>
                 <div className="icons flex">
                     <span className="flex-center" ref={this.myCurrencyRef} onClick={this.toggleCurrencyIcon}>
                         <span className="font-21">{currency}</span>

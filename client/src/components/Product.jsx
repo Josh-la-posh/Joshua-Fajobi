@@ -39,7 +39,7 @@ class Product extends PureComponent {
 
     handleClick = (e, id) => {
         if (!this.myButtontRef && !this.myButtonRef.current.contains(e.target)) {
-             this.props.router.navigate(`/Scandiweb/pdp/${id}`);
+             this.props.router.navigate(`/scandiweb/pdp/${id}`);
         }
     }
     

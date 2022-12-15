@@ -107,7 +107,7 @@ class CategoryOverlay extends PureComponent {
                     </div>
                     
                     <div className="button flex-align font-14 weight-600">
-                        <Link to='/Scandiweb/cart'><button className="view" onClick={toggle}>VIEW BAG</button></Link>
+                        <Link to='/scandiweb/cart'><button className="view" onClick={toggle}>VIEW BAG</button></Link>
                         <button className="checkout">ORDER</button>
                     </div>
                 </div>
