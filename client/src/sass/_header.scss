@@ -6,11 +6,15 @@
     top: 0;
     left: 0;
     z-index: 10;
+    @include laptop {padding: 0 4.3rem 0.25rem;}
+    @include tablet {padding: 0 0.8rem 0.1rem;}
 
     .categories {
-        list-style: none;
         gap: 2rem;
         margin-left: 1rem;
+        @include tablet {
+            gap: 1rem;
+        margin-left: 0;}
 
         li {
             a {
@@ -47,8 +51,8 @@
         color: var(--pri-color);
         position: relative;
         @include laptop {gap: 1.25rem;}
-        @include tablet {gap: 1.625rem;}
-        @include mobile {gap: 1rem;}
+        @include tablet {gap: 1rem;}
+        @include mobile {gap: 0.5rem;}
 
         span {
             gap: 5px;

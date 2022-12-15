@@ -7,7 +7,9 @@ export const addToCart = (id, gallery, brand, prices, name, attributes, selected
             JSON.parse(localStorage.getItem('data')) :
             [];
 
-    let counter = 0;
+    var counter = 0;
+    var imdex = index;
+    console.log(imdex)
 
     if (attributes.length === selectedAttribute.length) {
         cart.some(cartItem => cartItem.id === id)
