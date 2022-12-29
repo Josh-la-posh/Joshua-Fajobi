@@ -26,14 +26,12 @@
             grid-template-columns: repeat(3, 1fr);
             grid-column-gap: 2.5rem;
             grid-row-gap: 6.438rem;
-
             @include laptop {grid-colum-gap: 3.23%; gap-row-gap: 7.7%;}
-
         
             .col-lg-4 {
                 padding: 0.688rem 0.938rem 1rem;
                 max-height: 27.75rem;
-                @include laptop {padding: 0.5% 3.89% 3.6%;}
+                @include tablet {padding: 0.5% 3.89% 3.6%;}
 
                 &:hover {
                     box-shadow: 0px 2px 10px 2px #ddd;
