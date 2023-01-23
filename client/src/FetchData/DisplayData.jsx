@@ -3,38 +3,38 @@ import { gql } from "@apollo/client";
 //ALL CATEGORIES
 
 export const QUERY_ALL_CATEGORIES = gql`
-    query GetAllCategories {
-        categories {
+  query GetAllCategories {
+    categories {
+      name
+      products {
+        id
         name
-        products {
+        inStock
+        gallery
+        description
+        category
+        attributes {
+          id
+          name
+          type
+          items {
             id
-            name
-            inStock
-            gallery
-            description
-            category
-            attributes {
-            id
-            name
-            type
-            items {
-                id
-                value
-                displayValue
-            }
-            }
-            prices {
-            currency {
-                label
-                symbol
-            }
-            amount
-            }
-            brand
+            value
+            displayValue
+          }
         }
+        prices {
+          currency {
+            label
+            symbol
+          }
+          amount
+        }
+        brand
+      }
     }
   }
-`
+`;
 
 // A SINGLE PRODUCT
 
@@ -64,12 +64,11 @@ export const QUERY_ALL_CATEGORIES = gql`
 //         amount
 //       }
 //       brand
-    
+
 //     }
-    
+
 //   }
 // `
-
 
 // // FOR CURRENCIES
 

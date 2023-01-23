@@ -1,23 +1,23 @@
 :root {
-    --active-color: #5ECE7B;
-    --pri-color: #1D1F22;
-    --fade-color: #8D8F9A;
+  --active-color: #5ece7b;
+  --pri-color: #1d1f22;
+  --fade-color: #8d8f9a;
 }
 
 @mixin mobile {
-    @media screen and (max-width: 480px) {
-        @content;
-    }
+  @media screen and (max-width: 480px) {
+    @content;
+  }
 }
 
 @mixin tablet {
-    @media screen and (max-width: 768px) {
-        @content;
-    }
+  @media screen and (max-width: 768px) {
+    @content;
+  }
 }
 
 @mixin laptop {
-    @media screen and (max-width: 1200px) {
-        @content;
-    }
+  @media screen and (max-width: 1200px) {
+    @content;
+  }
 }
