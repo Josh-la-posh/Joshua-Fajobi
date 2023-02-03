@@ -117,52 +117,38 @@ class CartItems extends PureComponent {
                                 : "sizes flex font-16 weight-400"
                             }
                           >
-                            {type === "swatch"
-                              ? items.map(({ value }, index) => {
-                                  return (
-                                    <span
-                                      key={index}
-                                      className="flex-center"
-                                      style={
-                                        selectedAttribute.some(
-                                          (att) =>
-                                            Object.keys(att)[0] === name &&
-                                            Object.values(att)[0] === value
-                                        )
-                                          ? {
-                                              backgroundColor: `${value}`,
-                                              outline: "1px solid #5ECE7B",
-                                            }
-                                          : { backgroundColor: `${value}` }
-                                      }
-                                    ></span>
-                                  );
-                                })
-                              : items.map(({ value }, index) => {
-                                  return (
-                                    <span
-                                      key={index}
-                                      className="flex-center"
-                                      style={
-                                        selectedAttribute.some(
-                                          (att) =>
-                                            Object.keys(att)[0] === name &&
-                                            Object.values(att)[0] === value
-                                        )
-                                          ? {
-                                              backgroundColor: "#000",
-                                              color: "#fff",
-                                            }
-                                          : {
-                                              backgroundColor: "#fff",
-                                              color: "#000",
-                                            }
-                                      }
-                                    >
-                                      {value}
-                                    </span>
-                                  );
-                                })}
+                            {items.map(({ value }, index) => {
+                              return (
+                                <span
+                                  key={index}
+                                  className="flex-center"
+                                  style={
+                                    selectedAttribute.some(
+                                      (att) =>
+                                        Object.keys(att)[0] === name &&
+                                        Object.values(att)[0] === value
+                                    )
+                                      ? type === "swatch"
+                                        ? {
+                                            backgroundColor: `${value}`,
+                                            outline: "1px solid #5ECE7B",
+                                          }
+                                        : {
+                                            backgroundColor: "#000",
+                                            color: "#fff",
+                                          }
+                                      : type === "swatch"
+                                      ? { backgroundColor: `${value}` }
+                                      : {
+                                          backgroundColor: "#fff",
+                                          color: "#000",
+                                        }
+                                  }
+                                >
+                                  {type !== "swatch" && value}
+                                </span>
+                              );
+                            })}
                           </div>
                         </div>
                       );
@@ -207,27 +193,13 @@ class CartItems extends PureComponent {
                             onClick={() => prevImg(index, imageIndex)}
                             className="arrow flex-center font-15"
                           >
-                            <Arrow
-                              style={{
-                                stroke: "white",
-                                width: "24",
-                                height: "24",
-                                transform: "rotate(90deg",
-                              }}
-                            />
+                            <Arrow className="arrow_left" />
                           </button>
                           <button
                             onClick={() => nextImg(index, imageIndex)}
                             className="arrow flex-center font-15"
                           >
-                            <Arrow
-                              style={{
-                                stroke: "white",
-                                width: "24",
-                                height: "24",
-                                transform: "rotate(-90deg",
-                              }}
-                            />
+                            <Arrow className="arrow_right" />
                           </button>
                         </span>
                       )}

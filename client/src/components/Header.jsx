@@ -124,9 +124,10 @@ class Header extends PureComponent {
             <Arrow
               className="arrow"
               style={
-                isCurrencyToggled
+                (isCurrencyToggled
                   ? { transform: "rotate(180deg" }
-                  : { transform: "" }
+                  : { transform: "" },
+                { width: 8, height: 4 })
               }
             />
             <span>

@@ -82,11 +82,7 @@ class CategoryOverlay extends PureComponent {
 
     return (
       <div className="overlay">
-        <div
-          className="backDrop"
-          onClick={toggle}
-          style={toggle ? { display: "block" } : { visibility: "hidden" }}
-        ></div>
+        {toggle && <div className="backDrop" onClick={toggle}></div>}
         <div className="categoryOverlay">
           <p className="font-16 weight-700">
             My Bag,
@@ -133,52 +129,38 @@ class CategoryOverlay extends PureComponent {
                                 type === "swatch" ? "color flex" : "sizes flex"
                               }
                             >
-                              {type === "swatch"
-                                ? items.map(({ value }, index) => {
-                                    return (
-                                      <span
-                                        key={index}
-                                        className="flex-center"
-                                        style={
-                                          selectedAttribute.some(
-                                            (att) =>
-                                              Object.keys(att)[0] === name &&
-                                              Object.values(att)[0] === value
-                                          )
-                                            ? {
-                                                backgroundColor: `${value}`,
-                                                outline: "1px solid #5ECE7B",
-                                              }
-                                            : { backgroundColor: `${value}` }
-                                        }
-                                      ></span>
-                                    );
-                                  })
-                                : items.map(({ value }, index) => {
-                                    return (
-                                      <span
-                                        key={index}
-                                        className="flex-center"
-                                        style={
-                                          selectedAttribute.some(
-                                            (att) =>
-                                              Object.keys(att)[0] === name &&
-                                              Object.values(att)[0] === value
-                                          )
-                                            ? {
-                                                backgroundColor: "#000",
-                                                color: "#fff",
-                                              }
-                                            : {
-                                                backgroundColor: "#fff",
-                                                color: "#000",
-                                              }
-                                        }
-                                      >
-                                        {value}
-                                      </span>
-                                    );
-                                  })}
+                              {items.map(({ value }, index) => {
+                                return (
+                                  <span
+                                    key={index}
+                                    className="flex-center"
+                                    style={
+                                      selectedAttribute.some(
+                                        (att) =>
+                                          Object.keys(att)[0] === name &&
+                                          Object.values(att)[0] === value
+                                      )
+                                        ? type === "swatch"
+                                          ? {
+                                              backgroundColor: `${value}`,
+                                              outline: "1px solid #5ECE7B",
+                                            }
+                                          : {
+                                              backgroundColor: "#000",
+                                              color: "#fff",
+                                            }
+                                        : type === "swatch"
+                                        ? { backgroundColor: `${value}` }
+                                        : {
+                                            backgroundColor: "#fff",
+                                            color: "#000",
+                                          }
+                                    }
+                                  >
+                                    {type !== "swatch" && value}
+                                  </span>
+                                );
+                              })}
                             </div>
                           </div>
                         );

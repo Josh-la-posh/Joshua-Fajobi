@@ -528,6 +528,14 @@
               width: 1.5rem;
               height: 1.5rem;
               border: none;
+
+              &_left {
+                transform: rotate(90deg);
+              }
+
+              &_right {
+                transform: rotate(-90deg);
+              }
             }
           }
         }
