@@ -39,7 +39,6 @@ class Header extends PureComponent {
 
   handleClick = (e, name, index) => {
     var li = document.getElementsByName("a");
-    console.log(li);
     return index;
   };
 

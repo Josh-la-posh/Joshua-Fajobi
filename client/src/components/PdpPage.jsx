@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class PdpContent extends PureComponent {
-  state = { displayedImg: "" };
+  state = { displayedImg: '' };
 
   componentDidMount() {
     addToCart();
@@ -63,7 +63,8 @@ class PdpContent extends PureComponent {
             <img
               src={
                 this.state.displayedImg === ""
-                  ? product.gallery
+                ? product.gallery
+
                   : this.state.displayedImg
               }
               alt=""
@@ -134,10 +135,10 @@ class PdpContent extends PureComponent {
           </div>
 
           
-            <button
+            {product.inStock && <button
               className="font-16 weight-600"
               onClick={() =>
-                {product.inStock && (addToCart(
+                addToCart(
                   product.id,
                   product.gallery,
                   product.brand,
@@ -145,11 +146,11 @@ class PdpContent extends PureComponent {
                   product.name,
                   product.attributes,
                   selectedAttribute
-                ))}
+                )
               }
             >
               ADD TO CART
-            </button>
+            </button>}
           <p className="font-16 weight-400">
             {product.description?.replace(/<[^>]+>/g, "")}
           </p>

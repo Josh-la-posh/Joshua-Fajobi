@@ -10,7 +10,6 @@ export const addToCart =
 
     var counter = 0;
     var imdex = index;
-    console.log(imdex);
 
     if (attributes.length === selectedAttribute.length) {
       cart.some((cartItem) => cartItem.id === id)
